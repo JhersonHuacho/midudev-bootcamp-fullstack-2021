@@ -1,0 +1,10 @@
+title 0.6 - Nueva nota SPA
+
+note over browser:
+browser executes the event handler
+of form onsubmit
+end note
+
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: Return JSON {"message":"note created"}
