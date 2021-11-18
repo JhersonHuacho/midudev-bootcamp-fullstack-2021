@@ -27,7 +27,11 @@ Un Middleware es una función que intercepta la petición que esta pasando por t
 CORS => Cross Origin Resource Sharing
 Compartir Recursos entre diferentes origines.
 ---
-Instalaciones:
+Heroku CLI
+$ heroku create  => Me va crear una aplicación de heroku
+
+---
+Instalaciones NPM:
 1. Nodemon
 2. uuid
 3. eslint    => npm install eslint -D
@@ -43,3 +47,6 @@ Instalaciones:
 Plugins VSCode
 1. REST Client
 2. ESLint
+
+Instalaciones windows
+1. Heroku CLI
