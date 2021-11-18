@@ -1,0 +1,45 @@
+http ⇒ puerto por defecto 8080
+
+https ⇒ puerto por defecto 443
+
+Semantic Version:
+    ^ = virgulilla
+    "^2.0.15" => ^ = NO.SI.SI
+    npm instal -E => te instala la versión exacta
+
+REST => Este tipo de arquitectura nos permite construir APIs que sean escalables.
+https://jsonplaceholder.typicode.com/
+
+https://httpstatuses.com/
+https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+https://http.cat/
+https://httpstatus.io/
+
+----
+Linter es una herramienta que detecta y te señala los errores que
+tiene cualquier lenguaje de programación.
+Te ayuda tambien en el Code Style.
+El Linter mas extendido es "ESLint"
+---
+Middleware
+Un Middleware es una función que intercepta la petición que esta pasando por tu API.
+---
+CORS => Cross Origin Resource Sharing
+Compartir Recursos entre diferentes origines.
+---
+Instalaciones:
+1. Nodemon
+2. uuid
+3. eslint    => npm install eslint -D
+4. JavaScript Standard Style => npm install standard --save-dev
+    En el package.json agregar:
+    {
+        "eslintConfig": {
+            "extends": "./node_modules/standard/eslintrc.json"
+        }
+    }
+5. cors => npm install cors
+
+Plugins VSCode
+1. REST Client
+2. ESLint
