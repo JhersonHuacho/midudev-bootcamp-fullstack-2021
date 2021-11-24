@@ -29,6 +29,12 @@ Compartir Recursos entre diferentes origines.
 ---
 Heroku CLI
 $ heroku create  => Me va crear una aplicación de heroku
+$ git push origin heroku
+$ git subtree push --prefix path/to/subdirectory heroku master
+$ git subtree push --prefix path/to/app-subdir heroku master
+
+Lo que vayas a deployar a Heroku tiene que estar en la rama que vas a deployar.
+Cuando haces push al origen de heroku estas diciendo de que rama va a tener que recuperar esto.
 
 ---
 Instalaciones NPM:
@@ -50,3 +56,11 @@ Plugins VSCode
 
 Instalaciones windows
 1. Heroku CLI
+
+/***************************************/
+PREGUNTAS Y RESPUESTAS 
+/***************************************/
+Jenkins como tal no es un servidor donde puedas hospedar aplicaciones web.
+Jenkins es una maquina en la que tu puedes hacer CI/CD, podriamos utilizar jenkins
+para deployar a Heroku.
+No vamos a ver Jenkins, pero vamos a ver GitHub Actions que nos va servir de Jenkins.

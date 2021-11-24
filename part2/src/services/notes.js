@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-// const baseUrl = 'http://localhost:3005/notes';
-const baseUrl = 'http://localhost:3001/api/notes';
+// const baseUrl = 'http://localhost:3005/notes'; // local debug
+// const baseUrl = 'http://localhost:3001/api/notes'; // public local 
+const baseUrl = 'https://whispering-sierra-47795.herokuapp.com/api/notes';
 
 const getAll = () => {
   const request = axios.get(baseUrl);
