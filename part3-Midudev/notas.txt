@@ -64,3 +64,10 @@ Jenkins como tal no es un servidor donde puedas hospedar aplicaciones web.
 Jenkins es una maquina en la que tu puedes hacer CI/CD, podriamos utilizar jenkins
 para deployar a Heroku.
 No vamos a ver Jenkins, pero vamos a ver GitHub Actions que nos va servir de Jenkins.
+
+/*****
+$ PORT=3002 npm run dev
+
+/***
+Sentry.io (https://sentry.io/welcome/)
+    Te permite capturar esos errores e ir a un tablero donde te muestra todo

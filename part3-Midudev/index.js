@@ -1,51 +1,42 @@
-let notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    date: '2019-05-30T17:30:31.098Z',
-    important: true
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    date: '2019-05-30T18:39:34.091Z',
-    important: false
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    date: '2019-05-30T19:20:14.298Z',
-    important: true
-  },
-  {
-    content: 'Javascript is functional',
-    date: '2021-11-10T20:28:27.911Z',
-    important: false,
-    id: 4
-  },
-  {
-    content: 'Javascript is functional',
-    date: '2021-11-10T20:28:27.911Z',
-    important: false,
-    id: 5
-  },
-  {
-    content: 'huacho',
-    date: '2021-11-10T20:32:56.491Z',
-    important: false,
-    id: 6
-  }
-]
+// let notes = []
+require('dotenv').config()
+require('./mongo')
 
 const express = require('express')
+const Sentry = require('@sentry/node') // Sentry
+const Tracing = require('@sentry/tracing') // Sentry
 const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 3001
 const logger = require('./loggerMiddleware')
+const Note = require('./models/Note')
+const notFound = require('./middleware/notFound')
+const handleErrors = require('./middleware/handleErrors')
+
+Sentry.init({
+  dsn: 'https://7c1b989c44874ae6a068dbf7102e716c@o1092306.ingest.sentry.io/6110515',
+  integrations: [
+    // enable HTTP calls tracing
+    new Sentry.Integrations.Http({ tracing: true }),
+    // enable Express.js middleware tracing
+    new Tracing.Integrations.Express({ app })
+  ],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0
+})
+
+// RequestHandler creates a separate execution context using domains, so that every
+// transaction/span/breadcrumb is attached to its own Hub instance
+app.use(Sentry.Handlers.requestHandler())
+// TracingHandler creates a trace for every incoming request
+app.use(Sentry.Handlers.tracingHandler())
 
 app.use(cors()) // por defecto cualquier origen pueda conectarse a nuestra api
 app.use(express.json())
-
+app.use('/static', express.static('images'))
 app.use(logger)
 
 app.get('/', (request, response) => {
@@ -53,58 +44,106 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/notes', (request, response) => {
-  response.json(notes)
+  Note.find({}).then(notes => {
+    console.log('notes', notes)
+    const newNotes = notes.map(note => {
+      const { _id, _v, ...restOfNote } = note
+      return {
+        ...restOfNote,
+        id: _id
+      }
+    })
+    console.log('newNotes', newNotes)
+    response.json(notes)
+  })
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
   const id = request.params.id
   console.log('request.params', request.params)
-  const note = notes.find(note => note.id === parseInt(id))
+  Note.findById(id)
+    .then(note => {
+      if (note) {
+        response.json(note)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(err => next(err))
+  // const note = notes.find(note => note.id === parseInt(id))
 
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
+  // if (note) {
+  //   response.json(note)
+  // } else {
+  //   response.status(404).end()
+  // }
 })
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const note = request.body
 
-  if (note || !note.content) {
+  if (!note.content) {
     return response.status(400).json({
-      error: 'note.content is missing'
+      error: 'required "content" field is missing'
     })
   }
 
-  const ids = notes.map(note => note.id)
-  const maxId = Math.max(...ids)
-  const newNote = {
-    id: maxId + 1,
+  const newNote = new Note({
     content: note.content,
     important: typeof note.important !== 'undefined'
       ? note.important
       : false,
     date: new Date().toISOString()
-  }
-  notes = [...notes, newNote]
-
-  response.status(201).json(newNote)
-})
-
-app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
-
-  response.status(204).end()
-})
-
-app.use((request, response, next) => {
-  console.log('FIN')
-  response.status(404).json({
-    error: 'Not found'
   })
+
+  newNote.save().then(savedNote => {
+    response.json(savedNote)
+  }).catch(err => next(err))
+
+  // const ids = notes.map(note => note.id)
+  // const maxId = Math.max(...ids)
+  // const newNote = {
+  //   id: maxId + 1,
+  //   content: note.content,
+  //   important: typeof note.important !== 'undefined'
+  //     ? note.important
+  //     : false,
+  //   date: new Date().toISOString()
+  // }
+  // notes = [...notes, newNote]
+
+  // response.status(201).json(newNote)
 })
+
+app.put('/api/notes/:id', (request, response, next) => {
+  const id = request.params.id
+  const note = request.body
+
+  const newNoteInfo = {
+    content: note.content,
+    important: note.important
+  }
+  // notes = notes.filter(note => note.id !== id)
+  Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
+    .then(result => {
+      response.json(result)
+    }).catch(error => next(error))
+})
+
+app.delete('/api/notes/:id', (request, response, next) => {
+  const id = request.params.id
+  // notes = notes.filter(note => note.id !== id)
+  Note.findByIdAndRemove(id)
+    .then(() => response.status(404).end())
+    .catch((error) => next(error))
+})
+
+app.use(notFound)
+
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler())
+
+app.use(handleErrors)
 
 app.listen(PORT, () => {
   console.log(`Server run on port ${PORT}`)
