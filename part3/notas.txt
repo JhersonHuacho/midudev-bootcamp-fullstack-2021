@@ -1,0 +1,10 @@
+
+(signo de intercalación)
+^ => Caret 
+https://docs.npmjs.com/about-semantic-versioning
+
+Si quiero ejecutar nodemon desde la consola:
+$ node_modules/.bin/nodemon index.js
+
+Si quiero ejecutar nodemon agregando un script en package.json:
+"dev": "nodemon index.js",
