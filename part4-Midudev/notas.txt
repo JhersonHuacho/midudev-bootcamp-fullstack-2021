@@ -1,0 +1,103 @@
+http ⇒ puerto por defecto 8080
+
+https ⇒ puerto por defecto 443
+
+Semantic Version:
+    ^ = virgulilla
+    "^2.0.15" => ^ = NO.SI.SI
+    npm instal -E => te instala la versión exacta
+
+REST => Este tipo de arquitectura nos permite construir APIs que sean escalables.
+https://jsonplaceholder.typicode.com/
+
+https://httpstatuses.com/
+https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+https://http.cat/
+https://httpstatus.io/
+
+----
+Linter es una herramienta que detecta y te señala los errores que
+tiene cualquier lenguaje de programación.
+Te ayuda tambien en el Code Style.
+El Linter mas extendido es "ESLint"
+---
+Middleware
+Un Middleware es una función que intercepta la petición que esta pasando por tu API.
+---
+CORS => Cross Origin Resource Sharing
+Compartir Recursos entre diferentes origines.
+---
+Heroku CLI
+$ heroku create  => Me va crear una aplicación de heroku
+$ git push origin heroku
+$ git subtree push --prefix path/to/subdirectory heroku master
+$ git subtree push --prefix path/to/app-subdir heroku master
+
+Lo que vayas a deployar a Heroku tiene que estar en la rama que vas a deployar.
+Cuando haces push al origen de heroku estas diciendo de que rama va a tener que recuperar esto.
+
+---
+Instalaciones NPM:
+1. Nodemon
+2. uuid
+3. eslint    => npm install eslint -D
+4. JavaScript Standard Style => npm install standard --save-dev
+    En el package.json agregar:
+    {
+        "eslintConfig": {
+            "extends": "./node_modules/standard/eslintrc.json"
+        }
+    }
+5. cors => npm install cors
+
+Plugins VSCode
+1. REST Client
+2. ESLint
+
+Instalaciones windows
+1. Heroku CLI
+
+/***************************************/
+PREGUNTAS Y RESPUESTAS 
+/***************************************/
+Jenkins como tal no es un servidor donde puedas hospedar aplicaciones web.
+Jenkins es una maquina en la que tu puedes hacer CI/CD, podriamos utilizar jenkins
+para deployar a Heroku.
+No vamos a ver Jenkins, pero vamos a ver GitHub Actions que nos va servir de Jenkins.
+
+/*****
+$ PORT=3002 npm run dev
+
+/***
+Sentry.io (https://sentry.io/welcome/)
+    Te permite capturar esos errores e ir a un tablero donde te muestra todo
+
+
+/// TESTING
+MOCHA => Era una de las mas usada para hacer testing
+AVA => 
+JEST => Por defecto JEST esta pensado para trabajar en el cliente, 
+puede similar cosas del DOM, y esas cosas no lo necesitamos y pueden
+ser probematicas. Asi que en nuestro package.json vamos añadir una 
+configuración:
+
+"jest": {
+    "testEnvironment": "node"
+  }
+
+* npm
+    - npm install cross-env
+    - npm install supertest --save-dev
+
+* 
+    "test": "cross-env NODE_ENV=test jest --verbose --silent --detectOpenHandles"
+
+ERROR:
+https://stackoverflow.com/questions/69646298/close-mongodb-connection-open-handles-jest-express-app-testing
+
+* podemos decirle que ejecute un solo archivo
+"test": "cross-env NODE_ENV=test jest --verbose --silent tests/notes.test.js"
+
+* tambien por la consola puedes elegir un solo test
+$ npm run test -- -t "there are two notes"
+$ npm run test -- -t "notes"
